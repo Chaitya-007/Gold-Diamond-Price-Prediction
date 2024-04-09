@@ -175,8 +175,6 @@ question_label.pack(pady=10)
 
 # Radio button selection for prediction
 var = tk.StringVar()
-# var.set("") 
-var.set(None)  # Set initial value to None
 
 gold_radio = tk.Radiobutton(root, text="Gold Price Prediction", variable=var, value="Gold", font=("Arial", 12))
 gold_radio.pack()
