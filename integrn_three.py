@@ -42,16 +42,16 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 
 # Function to predict gold price for a given year
-def predict_gold_price(year):
-    year = [[year]]
-    predicted_price = model.predict(year)
-    return predicted_price[0]
+# def predict_gold_price(year):
+#     year = [[year]]
+#     predicted_price = model.predict(year)
+#     return predicted_price[0]
 
 # Function to handle button click event for gold prediction
-def predict_gold_button_click():
-    year = int(entry_year_gold.get())
-    predicted_price = predict_gold_price(year)
-    result_label_gold.config(text=f"Predicted gold price for {year}: ₹{predicted_price:.2f}")
+# def predict_gold_button_click():
+#     year = int(entry_year_gold.get())
+#     predicted_price = predict_gold_price(year)
+#     result_label_gold.config(text=f"Predicted gold price for {year}: ₹{predicted_price:.2f}")
 
 
 # Load the dataset for diamonds (assuming you have a CSV file named 'diamond_prices.csv' with columns 'Year' and 'Price')
@@ -91,6 +91,20 @@ def proceed():
         open_diamond_prediction_window()
 
 def open_gold_prediction_window():
+    
+    def predict_gold_price(year):
+        year = [[year]]
+        predicted_price = model.predict(year)
+        return predicted_price[0]
+    
+    def predict_gold_button_click():
+        try:
+            year = int(gold_entry.get())
+            predicted_price = predict_gold_price(year)  # Assuming predict_gold_price function is defined elsewhere
+            result_label.config(text=f"Predicted Gold Price: ₹{predicted_price:.2f}", fg="green")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid year.")
+            
     gold_window = tk.Toplevel(root)
     gold_window.title("Gold Price Prediction")
     
@@ -110,21 +124,27 @@ def open_gold_prediction_window():
     gold_entry = tk.Entry(gold_window, font=("Arial", 12), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
     gold_entry.pack()
     
-    def predict_gold_price():
-        try:
-            year = int(gold_entry.get())
-            predicted_price = predict_gold_price(year)  # Assuming predict_gold_price function is defined elsewhere
-            result_label.config(text=f"Predicted Gold Price: ₹{predicted_price:.2f}", fg="green")
-        except ValueError:
-            messagebox.showerror("Error", "Please enter a valid year.")
-    
-    gold_button = tk.Button(gold_window, text="Predict Price", command=predict_gold_price, bg="#4caf50", fg="white", font=("Arial", 12))
+    gold_button = tk.Button(gold_window, text="Predict Price", command=predict_gold_button_click, bg="#4caf50", fg="white", font=("Arial", 12))
     gold_button.pack(pady=10)
     
     result_label = tk.Label(gold_window, text="", font=("Arial", 12))
     result_label.pack(pady=10)
 
 def open_diamond_prediction_window():
+    
+    def predict_diamond_price(year):
+        year = [[year]]
+        predicted_price = model_diamond.predict(year)
+        return predicted_price[0]
+    
+    def predict_diamond_button_click():
+        try:
+            year = int(diamond_entry.get())
+            predicted_price = predict_diamond_price(year)  # Assuming predict_diamond_price function is defined elsewhere
+            result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid year.")
+            
     diamond_window = tk.Toplevel(root)
     diamond_window.title("Diamond Price Prediction")
     
@@ -144,15 +164,7 @@ def open_diamond_prediction_window():
     diamond_entry = tk.Entry(diamond_window, font=("Arial", 12), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
     diamond_entry.pack()
     
-    def predict_diamond_price():
-        try:
-            year = int(diamond_entry.get())
-            predicted_price = predict_diamond_price(year)  # Assuming predict_diamond_price function is defined elsewhere
-            result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
-        except ValueError:
-            messagebox.showerror("Error", "Please enter a valid year.")
-    
-    diamond_button = tk.Button(diamond_window, text="Predict Price", command=predict_diamond_price, bg="#4caf50", fg="white", font=("Arial", 12))
+    diamond_button = tk.Button(diamond_window, text="Predict Price", command=predict_diamond_button_click, bg="#4caf50", fg="white", font=("Arial", 12))
     diamond_button.pack(pady=10)
     
     result_label = tk.Label(diamond_window, text="", font=("Arial", 12))
