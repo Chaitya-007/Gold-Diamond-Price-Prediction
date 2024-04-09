@@ -173,7 +173,13 @@ def open_diamond_prediction_window():
 # Creating main window
 root = tk.Tk()
 root.title("Price Prediction Using Machine Learning")
-root.geometry("400x600")
+# root.geometry("400x600")
+# Get the width and height of the screen
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+# Set the geometry of the window to cover the entire screen
+root.geometry(f"{screen_width}x{screen_height}")
 
 # Load and display prediction image
 prediction_image = Image.open("prediction.jpeg")
