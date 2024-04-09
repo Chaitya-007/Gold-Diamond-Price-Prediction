@@ -181,8 +181,13 @@ screen_height = root.winfo_screenheight()
 # Set the geometry of the window to cover the entire screen
 root.geometry(f"{screen_width}x{screen_height}")
 
+# Title above the image
+title_label = tk.Label(root, text="Gold and Diamond Price Predictor", font=("Arial", 16, "bold"))
+title_label.pack(pady=10)
+
+
 # Load and display prediction image
-prediction_image = Image.open("prediction.jpeg")
+prediction_image = Image.open("prediction_02.jpeg")
 prediction_photo = ImageTk.PhotoImage(prediction_image)
 prediction_label = tk.Label(root, image=prediction_photo)
 prediction_label.pack(pady=10)
