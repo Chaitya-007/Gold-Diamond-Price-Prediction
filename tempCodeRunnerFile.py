@@ -1,0 +1,1 @@
+gold_radio.place(x=x_center, y=70 + image_height + 50, anchor="center")
