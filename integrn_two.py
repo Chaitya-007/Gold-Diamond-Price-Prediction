@@ -8,6 +8,8 @@ from sklearn.linear_model import LinearRegression
 from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 
+
+
 # Load the dataset (assuming you have a CSV file named 'modified_gold.csv' with columns 'Year' and 'Price')
 data = pd.read_csv('modified_gold.csv')
 
@@ -47,9 +49,9 @@ def predict_gold_price(year):
 
 # Function to handle button click event for gold prediction
 def predict_gold_button_click():
-    year = int(entry_year.get())
+    year = int(entry_year_gold.get())
     predicted_price = predict_gold_price(year)
-    result_label.config(text=f"Predicted gold price for {year}: ₹{predicted_price:.2f}")
+    result_label_gold.config(text=f"Predicted gold price for {year}: ₹{predicted_price:.2f}")
 
 
 # Load the dataset for diamonds (assuming you have a CSV file named 'diamond_prices.csv' with columns 'Year' and 'Price')
@@ -88,9 +90,18 @@ def predict_diamond_price(year):
 
 # Function to handle button click event for diamond prediction
 def predict_diamond_button_click():
-    year = int(entry_year_diamond.get())
+    year = int(entry_year_gold.get())
     predicted_price_diamond = predict_diamond_price(year)
     result_label_diamond.config(text=f"Predicted diamond price for {year}: ₹{predicted_price_diamond:.2f}")
+    
+def select_prediction():
+    selected_prediction = var.get()
+    if selected_prediction == "Gold":
+        gold_frame.pack()
+        diamond_frame.pack_forget()
+    elif selected_prediction == "Diamond":
+        diamond_frame.pack()
+        gold_frame.pack_forget()
 
 
 # Creating main window
@@ -122,15 +133,33 @@ diamond_radio.pack()
 # Frame for gold prediction
 gold_frame = tk.Frame(root)
 
+label_year_gold = tk.Label(root, text="Enter the year:", font=("Arial", 14))
+label_year_gold.pack(pady=10)
+
+entry_year_gold = tk.Entry(root, font=("Arial", 14), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
+entry_year_gold.pack()
+
 # Gold prediction button
 gold_button = tk.Button(gold_frame, text="Predict Gold Price", command=predict_gold_price, bg="#4caf50", fg="white", font=("Arial", 12))
 gold_button.pack(pady=10)
 
+result_label_gold = tk.Label(root, text="", font=("Arial", 14, "bold"), fg="green")
+result_label_gold.pack(pady=10)
+
 # Frame for diamond prediction
 diamond_frame = tk.Frame(root)
+
+label_year_diamond = tk.Label(root, text="Enter the year:", font=("Arial", 14))
+label_year_diamond.pack(pady=10)
+
+entry_year_diamond = tk.Entry(root, font=("Arial", 14), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
+entry_year_diamond.pack()
 
 # Diamond prediction button
 diamond_button = tk.Button(diamond_frame, text="Predict Diamond Price", command=predict_diamond_price, bg="#4caf50", fg="white", font=("Arial", 12))
 diamond_button.pack(pady=10)
+
+result_label_diamond = tk.Label(root, text="", font=("Arial", 14, "bold"), fg="green")
+result_label_diamond.pack(pady=10)
 
 root.mainloop()
