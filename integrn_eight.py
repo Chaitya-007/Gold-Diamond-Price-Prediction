@@ -6,6 +6,7 @@ from tkinter.font import BOLD
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk, ImageOps
@@ -32,6 +33,10 @@ model.fit(X_train, y_train)
 # Training the decision tree regression model for gold
 model_decision_tree = DecisionTreeRegressor(random_state=42)
 model_decision_tree.fit(X_train, y_train)
+
+# Training the KNN regression model for gold
+knn_model_gold = KNeighborsRegressor(n_neighbors=5)
+knn_model_gold.fit(X_train, y_train)
 
 
 def display_gold_analysis_graph():
@@ -61,6 +66,10 @@ X_train_diamond, X_test_diamond, y_train_diamond, y_test_diamond = train_test_sp
 # Training the linear regression model for diamonds
 model_diamond = LinearRegression()
 model_diamond.fit(X_train_diamond, y_train_diamond)
+
+# Training the KNN regression model for diamonds
+knn_model_diamond = KNeighborsRegressor(n_neighbors=5)
+knn_model_diamond.fit(X_train_diamond, y_train_diamond)
 
 def display_diamond_analysis_graph():
     # Visualizing the diamond prices over the years
@@ -104,6 +113,11 @@ def open_gold_prediction_window():
         predicted_price = model_decision_tree.predict(year)
         return predicted_price[0]
     
+    def predict_gold_price_knn(year):
+        year = [[year]]
+        predicted_price = knn_model_gold.predict(year)
+        return predicted_price[0]
+    
     def predict_gold_button_click():
         try:
             year = int(gold_entry.get())
@@ -111,7 +125,8 @@ def open_gold_prediction_window():
             # result_label.config(text=f"Predicted Gold Price: ₹{predicted_price:.2f}", fg="green")
             predicted_price_svm = predict_gold_price_svm(year)
             predicted_price_decision_tree = predict_gold_price_decision_tree(year)
-            result_label.config(text=f"Predicted Gold Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Gold Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Gold Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n", fg="green")
+            predicted_price_knn = predict_gold_price_knn(year)
+            result_label.config(text=f"Predicted Gold Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Gold Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Gold Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Gold Price (KNN): ₹{predicted_price_knn:.2f}\n", fg="green")
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid year.")
             
@@ -167,6 +182,11 @@ def open_diamond_prediction_window():
         year = [[year]]
         predicted_price = model_decision_tree.predict(year)
         return predicted_price[0]
+    
+    def predict_diamond_price_knn(year):
+        year = [[year]]
+        predicted_price = knn_model_diamond.predict(year)
+        return predicted_price[0]
 
     
     def predict_diamond_button_click():
@@ -176,7 +196,8 @@ def open_diamond_prediction_window():
             predicted_price_svm = predict_diamond_price_svm(year)
             # result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
             predicted_price_decision_tree = predict_diamond_price_decision_tree(year)
-            result_label.config(text=f"Predicted Diamond Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diamond Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Diamond Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}", fg="green")
+            predicted_price_knn = predict_diamond_price_knn(year)
+            result_label.config(text=f"Predicted Diamond Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diamond Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Diamond Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Diamond Price (KNN)): ₹{predicted_price_knn:.2f}", fg="green")
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid year.")
             
