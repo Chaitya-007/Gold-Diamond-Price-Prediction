@@ -140,11 +140,24 @@ def open_diamond_prediction_window():
         predicted_price = model_diamond.predict(year)
         return predicted_price[0]
     
+    def predict_diamond_price_svm(year):
+        try:
+            # Load the SVM model from file
+            svm_model = joblib.load("svm_diamond_model.pkl")
+            year = [[year]]
+            predicted_price = svm_model.predict(year)
+            return predicted_price[0]
+        except Exception as e:
+            print("Error:", e)
+            return None
+    
     def predict_diamond_button_click():
         try:
             year = int(diamond_entry.get())
             predicted_price = predict_diamond_price(year)  # Assuming predict_diamond_price function is defined elsewhere
-            result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
+            predicted_price_svm = predict_diamond_price_svm(year)
+            # result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
+            result_label.config(text=f"Predicted Diamond Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diamond Price (SVM): ₹{predicted_price_svm:.2f}", fg="green")
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid year.")
             
