@@ -18,6 +18,85 @@ from sklearn.svm import SVR
 svm_model = joblib.load("svm_gold_model.pkl")
 svm_model_diamond = joblib.load("svm_diamond_model.pkl")
 
+
+#! Adding petrol dataset
+# Load the dataset (assuming you have a CSV file named 'petrol_prices.csv' with columns 'Year' and 'Price')
+data = pd.read_csv('petrol_prices.csv')
+
+# Splitting data into features (X) and target variable (y)
+X_petrol = data[['Year']]
+X_petrol.columns = ['Year']
+y_petrol = data['Price']
+
+
+# Splitting the gold dataset into training and testing sets
+X_train_petrol, X_test_petrol, y_train_petrol, y_test_petrol = train_test_split(X_petrol, y_petrol, test_size=0.2, random_state=42)
+
+# Training the linear regression model for gold
+model_petrol = LinearRegression()
+model_petrol.fit(X_train_petrol, y_train_petrol)
+
+# Training the decision tree regression model for gold
+model_decision_tree_petrol = DecisionTreeRegressor(random_state=42)
+model_decision_tree_petrol.fit(X_train_petrol, y_train_petrol)
+
+# Training the KNN regression model for gold
+knn_model_petrol = KNeighborsRegressor(n_neighbors=5)
+knn_model_petrol.fit(X_train_petrol, y_train_petrol)
+
+
+def display_petrol_analysis_graph():
+    # Visualizing the gold prices over the years
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X, y, color='Green', label='Petrol Prices')
+    plt.title('Petrol Prices Over the Years')
+    plt.xlabel('Year')
+    plt.ylabel('Price')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+# !*****************************************************************************************************************************
+
+#! Adding diesel dataset
+# Load the dataset (assuming you have a CSV file named 'diesel_prices.csv' with columns 'Year' and 'Price')
+data = pd.read_csv('diesel_prices.csv')
+
+# Splitting data into features (X) and target variable (y)
+X_diesel = data[['Year']]
+X_diesel.columns = ['Year']
+y_diesel = data['Price']
+
+
+# Splitting the gold dataset into training and testing sets
+X_train_diesel, X_test_diesel, y_train_diesel, y_test_diesel = train_test_split(X_diesel, y_diesel, test_size=0.2, random_state=42)
+
+# Training the linear regression model for gold
+model_diesel = LinearRegression()
+model_diesel.fit(X_train_diesel, y_train_diesel)
+
+# Training the decision tree regression model for gold
+model_decision_tree_diesel = DecisionTreeRegressor(random_state=42)
+model_decision_tree_diesel.fit(X_train_diesel, y_train_diesel)
+
+# Training the KNN regression model for gold
+knn_model_diesel = KNeighborsRegressor(n_neighbors=5)
+knn_model_diesel.fit(X_train_diesel, y_train_diesel)
+
+
+def display_diesel_analysis_graph():
+    # Visualizing the gold prices over the years
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X, y, color='yellow', label='Diesel Prices')
+    plt.title('Diesel Prices Over the Years')
+    plt.xlabel('Year')
+    plt.ylabel('Price')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+# !*****************************************************************************************************************************
+
 # Load the dataset (assuming you have a CSV file named 'modified_gold.csv' with columns 'Year' and 'Price')
 data = pd.read_csv('modified_gold.csv')
 
@@ -53,6 +132,8 @@ def display_gold_analysis_graph():
     plt.grid(True)
     plt.legend()
     plt.show()
+    
+# !*********************************************************************************************************************************************
 
 # Load the dataset for diamonds (assuming you have a CSV file named 'diamond_prices.csv' with columns 'Year' and 'Price')
 diamond_data = pd.read_csv('diamond_prices.csv')
@@ -75,6 +156,9 @@ model_diamond.fit(X_train_diamond, y_train_diamond)
 knn_model_diamond = KNeighborsRegressor(n_neighbors=5)
 knn_model_diamond.fit(X_train_diamond, y_train_diamond)
 
+model_decision_tree_diamond = DecisionTreeRegressor(random_state=42)
+model_decision_tree_diamond.fit(X_train_diamond, y_train_diamond)
+
 def display_diamond_analysis_graph():
     # Visualizing the diamond prices over the years
     plt.figure(figsize=(10, 6))
@@ -87,6 +171,7 @@ def display_diamond_analysis_graph():
     plt.show()
     
     
+# !********************************************************************************************************************************************* 
     
 def calculate_accuracy(model, X_test, y_test):
     accuracy = model.score(X_test, y_test)
@@ -218,6 +303,9 @@ def open_gold_prediction_window():
     
     result_label = tk.Label(gold_window, text="", font=("Arial", 12, "bold"))
     result_label.pack(pady=10)
+    
+    
+# ***************************************************************************************************
 
 def open_diamond_prediction_window():
     
@@ -239,7 +327,7 @@ def open_diamond_prediction_window():
         
     def predict_diamond_price_decision_tree(year):
         year = [[year]]
-        predicted_price = model_decision_tree.predict(year)
+        predicted_price = model_decision_tree_diamond.predict(year)
         return predicted_price[0]
     
     def predict_diamond_price_knn(year):
@@ -293,6 +381,10 @@ def open_diamond_prediction_window():
 
 
 # ***************************************************************************************************
+
+
+
+
 root = tk.Tk()
 root.title("Price Prediction Using Machine Learning")
 
