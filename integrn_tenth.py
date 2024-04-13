@@ -561,7 +561,7 @@ screen_height = root.winfo_screenheight()
 root.geometry(f"{screen_width}x{screen_height}")
 
 # Title above the image
-title_label = tk.Label(root, text="Gold and Diamond Price Predictor", font=("Arial", 16, "bold"))
+title_label = tk.Label(root, text="Fuel Price Predictor", font=("Arial", 16, "bold"))
 title_label.pack(pady=10)
 
 # Load the prediction image
