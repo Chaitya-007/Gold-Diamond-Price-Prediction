@@ -87,7 +87,7 @@ knn_model_diesel.fit(X_train_diesel, y_train_diesel)
 def display_diesel_analysis_graph():
     # Visualizing the gold prices over the years
     plt.figure(figsize=(10, 6))
-    plt.scatter(X, y, color='yellow', label='Diesel Prices')
+    plt.scatter(X_diesel, y_diesel, color='yellow', label='Diesel Prices')
     plt.title('Diesel Prices Over the Years')
     plt.xlabel('Year')
     plt.ylabel('Price')
@@ -227,12 +227,24 @@ def open_accuracy_window():
 
 
 
+# def proceed():
+#     selected_prediction = var.get()
+#     if selected_prediction == "Gold":
+#         open_gold_prediction_window()
+#     elif selected_prediction == "Diamond":
+#         open_diamond_prediction_window()
+
 def proceed():
     selected_prediction = var.get()
     if selected_prediction == "Gold":
         open_gold_prediction_window()
     elif selected_prediction == "Diamond":
         open_diamond_prediction_window()
+    elif selected_prediction == "Petrol":
+        open_petrol_prediction_window()
+    elif selected_prediction == "Diesel":
+        open_diesel_prediction_window()
+
 
 def open_gold_prediction_window():
     
@@ -392,7 +404,7 @@ def open_petrol_prediction_window():
     def predict_petrol_price_svm(year):
         try:
             # Load the SVM model from file
-            svm_model = joblib.load("svm_diamond_model.pkl")
+            svm_model = joblib.load("svm_petrol_model.pkl")
             year = [[year]]
             predicted_price = svm_model.predict(year)
             return predicted_price[0]
@@ -419,7 +431,7 @@ def open_petrol_prediction_window():
             # result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
             predicted_price_decision_tree = predict_petrol_price_decision_tree(year)
             predicted_price_knn = predict_petrol_price_knn(year)
-            result_label.config(text=f"Predicted Diamond Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diamond Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Diamond Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Diamond Price (KNN)): ₹{predicted_price_knn:.2f}", fg="green")
+            result_label.config(text=f"Predicted Petrol Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Petrol Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Petrol Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Petrol Price (KNN)): ₹{predicted_price_knn:.2f}", fg="green")
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid year.")
             
@@ -434,8 +446,8 @@ def open_petrol_prediction_window():
     petrol_label = tk.Label(petrol_window, text="Diamond Price Prediction", font=("Arial", 16, "bold"))
     petrol_label.pack(pady=10)
     
-    petrol_image = Image.open("diamond.jpeg")
-    # diamond_image = diamond_image.resize((200, 200), Image.ANTIALIAS)
+    petrol_image = Image.open("petrol.jpeg")
+    petrol_image = petrol_image.resize((200, 200))
     petrol_photo = ImageTk.PhotoImage(petrol_image)
     petrol_image_label = tk.Label(petrol_window, image=petrol_photo)
     petrol_image_label.image = petrol_photo
@@ -456,6 +468,84 @@ def open_petrol_prediction_window():
 
 
 # ***************************************************************************************************
+
+
+def open_diesel_prediction_window():
+    
+    def predict_diesel_price(year):
+        year = [[year]]
+        predicted_price = model_diesel.predict(year)
+        return predicted_price[0]
+    
+    def predict_diesel_price_svm(year):
+        try:
+            # Load the SVM model from file
+            svm_model = joblib.load("svm_diesel_model.pkl")
+            year = [[year]]
+            predicted_price = svm_model.predict(year)
+            return predicted_price[0]
+        except Exception as e:
+            print("Error:", e)
+            return None
+        
+    def predict_diesel_price_decision_tree(year):
+        year = [[year]]
+        predicted_price = model_decision_tree_diesel.predict(year)
+        return predicted_price[0]
+    
+    def predict_diesel_price_knn(year):
+        year = [[year]]
+        predicted_price = knn_model_diesel.predict(year)
+        return predicted_price[0]
+
+    
+    def predict_diesel_button_click():
+        try:
+            year = int(diesel_entry.get())
+            predicted_price = predict_diesel_price(year)  # Assuming predict_diamond_price function is defined elsewhere
+            predicted_price_svm = predict_diesel_price_svm(year)
+            # result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
+            predicted_price_decision_tree = predict_diesel_price_decision_tree(year)
+            predicted_price_knn = predict_diesel_price_knn(year)
+            result_label.config(text=f"Predicted Diesel Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diesel Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Diesel Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Diesel Price (KNN)): ₹{predicted_price_knn:.2f}", fg="green")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid year.")
+            
+    def on_closing():
+        diesel_window.destroy()
+        display_diesel_analysis_graph()
+            
+    diesel_window = tk.Toplevel(root)
+    diesel_window.title("diesel Price Prediction")
+    diesel_window.protocol("WM_DELETE_WINDOW", on_closing)
+    
+    diesel_label = tk.Label(diesel_window, text="Diamond Price Prediction", font=("Arial", 16, "bold"))
+    diesel_label.pack(pady=10)
+    
+    diesel_image = Image.open("diesel.jpeg")
+    diesel_image = diesel_image.resize((200, 200))
+    diesel_photo = ImageTk.PhotoImage(diesel_image)
+    diesel_image_label = tk.Label(diesel_window, image=diesel_photo)
+    diesel_image_label.image = diesel_photo
+    diesel_image_label.pack()
+    
+    diesel_question_label = tk.Label(diesel_window, text="Enter the year for which the price needs to be predicted:", font=("Arial", 12, "bold"))
+    diesel_question_label.pack(pady=10)
+    
+    diesel_entry = tk.Entry(diesel_window, font=("Arial", 12), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
+    diesel_entry.pack()
+    
+    diesel_button = tk.Button(diesel_window, text="Predict Price", command=predict_diesel_button_click, bg="#4caf50", fg="white", font=("Arial", 12, "bold"))
+    diesel_button.pack(pady=10)
+    
+    result_label = tk.Label(diesel_window, text="", font=("Arial", 12))
+    result_label.pack(pady=10)
+
+
+
+# ***************************************************************************************************
+
+
 
 
 
@@ -504,11 +594,11 @@ gold_radio.place(x=x_start, y=50 + image_height + 70, anchor="center")
 diamond_radio = tk.Radiobutton(root, text="Diamond Price Prediction", variable=var, value="Diamond", font=("Arial", 16, "bold"))
 diamond_radio.place(x=x_start_second, y=50 + image_height + 70, anchor="center")
 
-diamond_radio = tk.Radiobutton(root, text="Petrol Price Prediction", variable=var, value="Diamond", font=("Arial", 16, "bold"))
-diamond_radio.place(x=x_start, y=50 + image_height + 110, anchor="center")
+petrol_radio = tk.Radiobutton(root, text="Petrol Price Prediction", variable=var, value="Petrol", font=("Arial", 16, "bold"))
+petrol_radio.place(x=x_start, y=50 + image_height + 110, anchor="center")
 
-diamond_radio = tk.Radiobutton(root, text="Diesel Price Prediction    ", variable=var, value="Diamond", font=("Arial", 16, "bold"))
-diamond_radio.place(x=x_start_second, y=50 + image_height + 110, anchor="center")
+diesel_radio = tk.Radiobutton(root, text="Diesel Price Prediction    ", variable=var, value="Diesel", font=("Arial", 16, "bold"))
+diesel_radio.place(x=x_start_second, y=50 + image_height + 110, anchor="center")
 
 # Proceed button
 proceed_button = tk.Button(root, text="Proceed", command=proceed, bg="#4caf50", fg="white", font=("Arial", 16, "bold"))
