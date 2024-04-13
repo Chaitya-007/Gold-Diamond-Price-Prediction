@@ -382,6 +382,81 @@ def open_diamond_prediction_window():
 
 # ***************************************************************************************************
 
+def open_petrol_prediction_window():
+    
+    def predict_petrol_price(year):
+        year = [[year]]
+        predicted_price = model_diamond.predict(year)
+        return predicted_price[0]
+    
+    def predict_petrol_price_svm(year):
+        try:
+            # Load the SVM model from file
+            svm_model = joblib.load("svm_diamond_model.pkl")
+            year = [[year]]
+            predicted_price = svm_model.predict(year)
+            return predicted_price[0]
+        except Exception as e:
+            print("Error:", e)
+            return None
+        
+    def predict_petrol_price_decision_tree(year):
+        year = [[year]]
+        predicted_price = model_decision_tree_petrol.predict(year)
+        return predicted_price[0]
+    
+    def predict_petrol_price_knn(year):
+        year = [[year]]
+        predicted_price = knn_model_petrol.predict(year)
+        return predicted_price[0]
+
+    
+    def predict_petrol_button_click():
+        try:
+            year = int(petrol_entry.get())
+            predicted_price = predict_petrol_price(year)  # Assuming predict_diamond_price function is defined elsewhere
+            predicted_price_svm = predict_petrol_price_svm(year)
+            # result_label.config(text=f"Predicted Diamond Price: ₹{predicted_price:.2f}", fg="green")
+            predicted_price_decision_tree = predict_petrol_price_decision_tree(year)
+            predicted_price_knn = predict_petrol_price_knn(year)
+            result_label.config(text=f"Predicted Diamond Price (Linear Regression): ₹{predicted_price:.2f}\n"f"Predicted Diamond Price (SVM): ₹{predicted_price_svm:.2f}\n"f"Predicted Diamond Price (Decision Tree): ₹{predicted_price_decision_tree:.2f}\n"f"Predicted Diamond Price (KNN)): ₹{predicted_price_knn:.2f}", fg="green")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid year.")
+            
+    def on_closing():
+        petrol_window.destroy()
+        display_petrol_analysis_graph()
+            
+    petrol_window = tk.Toplevel(root)
+    petrol_window.title("Petrol Price Prediction")
+    petrol_window.protocol("WM_DELETE_WINDOW", on_closing)
+    
+    petrol_label = tk.Label(petrol_window, text="Diamond Price Prediction", font=("Arial", 16, "bold"))
+    petrol_label.pack(pady=10)
+    
+    petrol_image = Image.open("diamond.jpeg")
+    # diamond_image = diamond_image.resize((200, 200), Image.ANTIALIAS)
+    petrol_photo = ImageTk.PhotoImage(petrol_image)
+    petrol_image_label = tk.Label(petrol_window, image=petrol_photo)
+    petrol_image_label.image = petrol_photo
+    petrol_image_label.pack()
+    
+    petrol_question_label = tk.Label(petrol_window, text="Enter the year for which the price needs to be predicted:", font=("Arial", 12, "bold"))
+    petrol_question_label.pack(pady=10)
+    
+    petrol_entry = tk.Entry(petrol_window, font=("Arial", 12), bd=2, relief="groove", highlightbackground="#cccccc", highlightthickness=2)
+    petrol_entry.pack()
+    
+    petrol_button = tk.Button(petrol_window, text="Predict Price", command=predict_petrol_button_click, bg="#4caf50", fg="white", font=("Arial", 12, "bold"))
+    petrol_button.pack(pady=10)
+    
+    result_label = tk.Label(petrol_window, text="", font=("Arial", 12))
+    result_label.pack(pady=10)
+
+
+
+# ***************************************************************************************************
+
 
 
 
@@ -411,6 +486,8 @@ prediction_label.place(x=int(screen_width * 0.15), y=50)
 
 # Calculate the x-coordinate for centering the widget
 x_center = screen_width // 2
+x_start = screen_width * 0.25
+x_start_second = screen_width * 0.75
 
 question_label = tk.Label(root, text="Which price do you want to predict?", font=("Arial", 16, "bold"))
 question_label.place(x=x_center, y=50 + image_height + 30, anchor="center")
@@ -418,11 +495,20 @@ question_label.place(x=x_center, y=50 + image_height + 30, anchor="center")
 # Radio button selection for prediction
 var = tk.StringVar()
 var.set(None)  # Set initial value to None
-gold_radio = tk.Radiobutton(root, text="Gold Price Prediction", variable=var, value="Gold", font=("Arial", 16, "bold"))
-gold_radio.place(x=x_center, y=50 + image_height + 70, anchor="center")
+# gold_radio = tk.Radiobutton(root, text="Gold Price Prediction", variable=var, value="Gold", font=("Arial", 16, "bold"))
+# gold_radio.place(x=x_center, y=50 + image_height + 70, anchor="center")
+
+gold_radio = tk.Radiobutton(root, text="Gold Price Prediction ", variable=var, value="Gold", font=("Arial", 16, "bold"))
+gold_radio.place(x=x_start, y=50 + image_height + 70, anchor="center")
 
 diamond_radio = tk.Radiobutton(root, text="Diamond Price Prediction", variable=var, value="Diamond", font=("Arial", 16, "bold"))
-diamond_radio.place(x=x_center, y=50 + image_height + 110, anchor="center")
+diamond_radio.place(x=x_start_second, y=50 + image_height + 70, anchor="center")
+
+diamond_radio = tk.Radiobutton(root, text="Petrol Price Prediction", variable=var, value="Diamond", font=("Arial", 16, "bold"))
+diamond_radio.place(x=x_start, y=50 + image_height + 110, anchor="center")
+
+diamond_radio = tk.Radiobutton(root, text="Diesel Price Prediction    ", variable=var, value="Diamond", font=("Arial", 16, "bold"))
+diamond_radio.place(x=x_start_second, y=50 + image_height + 110, anchor="center")
 
 # Proceed button
 proceed_button = tk.Button(root, text="Proceed", command=proceed, bg="#4caf50", fg="white", font=("Arial", 16, "bold"))
