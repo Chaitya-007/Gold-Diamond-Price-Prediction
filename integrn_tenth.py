@@ -519,7 +519,7 @@ def open_diesel_prediction_window():
     diesel_window.title("diesel Price Prediction")
     diesel_window.protocol("WM_DELETE_WINDOW", on_closing)
     
-    diesel_label = tk.Label(diesel_window, text="Diamond Price Prediction", font=("Arial", 16, "bold"))
+    diesel_label = tk.Label(diesel_window, text="Diesel Price Prediction", font=("Arial", 16, "bold"))
     diesel_label.pack(pady=10)
     
     diesel_image = Image.open("diesel.jpeg")
